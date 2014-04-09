@@ -4,8 +4,8 @@ import sys,time,struct,rle,mtf,cli
 def recordTime(f):
 	def w(*a):
 		start = time.time()
-		stop = time.time()
 		f(*a)
+		stop = time.time()
 		print("Completed in %f s" % (stop-start))
 	return w
 

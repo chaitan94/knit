@@ -1,0 +1,7 @@
+*.pyc
+*/*.pyc
+tests/*.rle
+tests/*.txt
+tests/*.jpg
+tests/*.png
+tests/*.lulz
