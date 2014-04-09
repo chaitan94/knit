@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import sys,time,struct,rle,mtf,cli
+import sys,time,struct,rle,mtf,bwt,cli
 
 def recordTime(f):
 	def w(*a):
@@ -72,6 +72,28 @@ def mtfdecompress(filename):
 	fo.write(a)
 	fo.close()
 
+@recordTime
+def bwtcompress(filename):
+	print("BWT-ing file %s" % filename)
+	fi = open(filename,"rb").read()
+	bwttransform = bwt.encode(fi)
+	
+	fo = open(filename+".bwt","wb")
+	fo.write(struct.pack('i',bwttransform[1]))
+	fo.write(struct.pack('c'*len(bwttransform[0]),*bwttransform[0]))
+	fo.close()
+
+@recordTime
+def bwtdecompress(filename):
+	print("decompressing file %s" % filename)
+	fi = open(filename,"rb")
+	n = struct.unpack('i',fi.read(4))[0]
+	c = fi.read()
+	fi.close()
+	fo = open(filename[:-4]+".lulz","wb")
+	fo.write(bwt.decode((c,n)))
+	fo.close()
+
 if __name__ == '__main__':
 	if len(sys.argv) == 3:
 		action = sys.argv[1]
@@ -85,6 +107,10 @@ if __name__ == '__main__':
 			mtfcompress(filename)
 		elif action == "mtfdecompress":
 			mtfdecompress(filename)
+		elif action == "bwtcompress":
+			bwtcompress(filename)
+		elif action == "bwtdecompress":
+			bwtdecompress(filename)
 		else:
 			cli.usage()
 	else:
