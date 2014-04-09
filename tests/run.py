@@ -1,6 +1,6 @@
 import unittest,sys,os
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
-from knit import main,bwt
+from knit import bwt
 
 class TestRle(unittest.TestCase):
 	pass
