@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import sys,time,struct,rle,mtf,bwt,cli,os
+import sys, time, rle, mtf, bwt, cli, os
 
 def recordTime(f):
 	def w(*a):
@@ -26,12 +26,12 @@ def rlecompress(infile):
 	finsize = os.stat(outfile).st_size
 	print("Original filesize: %d" % (inisize))
 	print("Final filesize: %d" % (finsize))
-	print("%f%% Compressed." % ((1-(float(finsize)/inisize))*100))
+	print("%f%% Compressed." % ((1 - (float(finsize) / inisize)) * 100))
 
 @recordTime
 def rledecompress(filename):
 	print("De-Compressing file %s" % filename)
-	rle.decodeFile(filename, filename[:-4]+".lulz")
+	rle.decodeFile(filename, filename[:-4] + ".lulz")
 
 @recordTime
 def mtfencode(filename):
@@ -41,7 +41,7 @@ def mtfencode(filename):
 @recordTime
 def mtfdecode(filename):
 	print("Move to front Decoding file %s" % filename)
-	mtf.decodeFile(filename, filename[:-4]+".lulz")
+	mtf.decodeFile(filename, filename[:-4] + ".lulz")
 
 @recordTime
 def bwtencode(filename):
