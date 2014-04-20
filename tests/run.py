@@ -13,7 +13,7 @@ class TestBwt(unittest.TestCase):
 		self.failIf(bwt.getCyclicSuffixArray(list('s.t'))!=[['s','.','t'],['t','s','.'],['.','t','s']])
 		self.failIf(bwt.getCyclicSuffixArray(list('sur'))!=[['s','u','r'],['r','s','u'],['u','r','s']])
 	def testBwtEncode(self):
-		self.failIf(bwt.encode('SIX.MIXED.PIXIES.SIFT.SIXTY.PIXIE.DUST.BOXES')[0]!='TEXYDST.E.IXIXIXXSSMPPS.B..E.S.EUSFXDIIOIIIT')
+		self.failIf(bwt.encode('SIX.MIXED.PIXIES.SIFT.SIXTY.PIXIE.DUST.BOXES')[1]!='TEXYDST.E.IXIXIXXSSMPPS.B..E.S.EUSFXDIIOIIIT')
 	def encodeDecode(self,string):
 		compressedString = bwt.encode(string)
 		reconstr = bwt.decode(compressedString)

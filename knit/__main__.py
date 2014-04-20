@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import sys,time,struct,rle,mtf,bwt,cli
+import sys,time,struct,rle,mtf,bwt,cli,os
 
 def recordTime(f):
 	def w(*a):
@@ -18,37 +18,20 @@ def decompress(filename):
 	pass
 
 @recordTime
-def rlecompress(filename):
-	print("Compressing file %s.." % filename)
-	fi = open(filename,"rb").read()
-	inisize = len(fi)
-	print("%d bytes read." % (inisize))
-	rledbytes = rle.encode(fi)
-
-	fo = open(filename+".rle","wb")
-	for i in rledbytes:
-		fo.write(struct.pack('cc', i[0], chr(i[1])))
-	finsize = len(rledbytes)*8
-	print("%d bytes written." % (finsize))
+def rlecompress(infile):
+	print("Run Length Encoding	 file %s.." % infile)
+	outfile = infile + ".rle"
+	rle.encodeFile(infile, outfile)
+	inisize = os.stat(infile).st_size
+	finsize = os.stat(outfile).st_size
+	print("Original filesize: %d" % (inisize))
+	print("Final filesize: %d" % (finsize))
 	print("%f%% Compressed." % ((1-(float(finsize)/inisize))*100))
-	fo.close()
 
 @recordTime
 def rledecompress(filename):
 	print("De-Compressing file %s" % filename)
-	fi = open(filename,"rb")
-	
-	rlestr = []
-	while True:
-		c = fi.read(1)
-		if not c: break
-		n = fi.read(1)
-		rlestr.append((c, ord(n)))
-	fi.close()
-
-	fo = open(filename[:-4]+".lulz","wb")
-	fo.write(rle.decode(rlestr))
-	fo.close()
+	rle.decodeFile(filename, filename[:-4]+".lulz")
 
 @recordTime
 def mtfencode(filename):
