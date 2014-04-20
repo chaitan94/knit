@@ -46,24 +46,12 @@ def mtfdecode(filename):
 @recordTime
 def bwtencode(filename):
 	print("BWT-ing file %s" % filename)
-	fi = open(filename,"rb").read()
-	bwttransform = bwt.encode(fi)
-	
-	fo = open(filename+".bwt","wb")
-	fo.write(struct.pack('i',bwttransform[0]))
-	fo.write(struct.pack('c'*len(bwttransform[1]),*bwttransform[1]))
-	fo.close()
+	bwt.encodeFile(filename, filename + ".bwt")
 
 @recordTime
 def bwtdecode(filename):
 	print("Reverse BWT-ing file %s" % filename)
-	fi = open(filename,"rb")
-	n = struct.unpack('i',fi.read(4))[0]
-	c = fi.read()
-	fi.close()
-	fo = open(filename[:-4]+".lulz","wb")
-	fo.write(bwt.decode((n,c)))
-	fo.close()
+	bwt.decodeFile(filename, filename[:-4] + ".lulz")
 
 if __name__ == '__main__':
 	if len(sys.argv) == 3:

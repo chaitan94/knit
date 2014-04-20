@@ -1,6 +1,8 @@
 *.pyc
 */*.pyc
 tests/*.rle
+tests/*.mtf
+tests/*.bwt
 tests/*.txt
 tests/*.jpg
 tests/*.png
