@@ -26,7 +26,8 @@ def rlecompress(filename):
 	rledbytes = rle.encode(fi)
 
 	fo = open(filename+".rle","wb")
-	fo.write(struct.pack('ci'*len(rledbytes), *(item for t in rledbytes for item in t)))
+	for i in rledbytes:
+		fo.write(struct.pack('cc', i[0], chr(i[1])))
 	finsize = len(rledbytes)*8
 	print("%d bytes written." % (finsize))
 	print("%f%% Compressed." % ((1-(float(finsize)/inisize))*100))
@@ -35,10 +36,16 @@ def rlecompress(filename):
 @recordTime
 def rledecompress(filename):
 	print("De-Compressing file %s" % filename)
-	fi = open(filename,"rb").read()
+	fi = open(filename,"rb")
 	
-	rlestr = struct.unpack('ci'*(len(fi)/8), fi)
-	
+	rlestr = []
+	while True:
+		c = fi.read(1)
+		if not c: break
+		n = fi.read(1)
+		rlestr.append((c, ord(n)))
+	fi.close()
+
 	fo = open(filename[:-4]+".lulz","wb")
 	fo.write(rle.decode(rlestr))
 	fo.close()

@@ -7,7 +7,7 @@ def encode(byts):
 	c = 1
 	ret = []
 	while i < n:
-		if byts[i] == b:
+		if byts[i] == b and c < 255:
 			c = c + 1
 		else:
 			ret.append((b,c))
@@ -19,8 +19,7 @@ def encode(byts):
 
 def decode(rle):
 	""" Decodes a Run-Length-Encoded byte array """
-	n = len(rle)/2
 	ret = ''
-	for x in xrange(n):
-		ret = ret + rle[x*2]*int(rle[x*2+1])
+	for x in rle:
+		ret = ret + x[0]*x[1]
 	return ret
