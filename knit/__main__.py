@@ -35,41 +35,13 @@ def rledecompress(filename):
 
 @recordTime
 def mtfencode(filename):
-	print("Compressing file %s.." % filename)
-	fi = open(filename,"rb").read()
-	inisize = len(fi)
-	print("%d bytes read." % (inisize))
-	alph = list(set(fi))
-	seq = mtf.encode(fi)
-
-	fo = open(filename+".mtf","wb")
-	fo.write(struct.pack('i',len(seq)))
-	for i in seq:
-		fo.write(struct.pack('c', chr(i)))
-	fo.write(struct.pack('i',len(alph)))
-	fo.write(struct.pack('c'*len(alph), *alph))
-	finsize = (2+len(seq))+len(alph)
-	print("%d bytes written." % (finsize))
-	print("%f%% Compressed." % ((1-(float(finsize)/inisize))*100))
-	fo.close()
+	print("Move to front Encoding file %s.." % filename)
+	mtf.encodeFile(filename, filename + ".mtf")
 
 @recordTime
 def mtfdecode(filename):
-	print("De-Compressing file %s" % filename)	
-	fi = open(filename,"rb")
-	n = struct.unpack('i',fi.read(4))[0]
-	seq = []
-	for x in range(n):
-		seq.append(ord(struct.unpack('c',fi.read(1))[0]))
-	n = struct.unpack('i',fi.read(4))[0]
-	alph = []
-	for x in range(n):
-		alph.append(struct.unpack('c',fi.read(1))[0])
-	a = mtf.decode(seq,alph)
-	
-	fo = open(filename[:-4]+".lulz","wb")
-	fo.write(a)
-	fo.close()
+	print("Move to front Decoding file %s" % filename)
+	mtf.decodeFile(filename, filename[:-4]+".lulz")
 
 @recordTime
 def bwtencode(filename):
