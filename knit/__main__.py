@@ -11,6 +11,14 @@ def recordTime(f):
 
 @recordTime
 def compressFile(filename):
+	pass
+
+@recordTime
+def decompress(filename):
+	pass
+
+@recordTime
+def rlecompress(filename):
 	print("Compressing file %s.." % filename)
 	fi = open(filename,"rb").read()
 	inisize = len(fi)
@@ -25,7 +33,7 @@ def compressFile(filename):
 	fo.close()
 
 @recordTime
-def decompress(filename):
+def rledecompress(filename):
 	print("De-Compressing file %s" % filename)
 	fi = open(filename,"rb").read()
 	
@@ -36,7 +44,7 @@ def decompress(filename):
 	fo.close()
 
 @recordTime
-def mtfcompress(filename):
+def mtfencode(filename):
 	print("Compressing file %s.." % filename)
 	fi = open(filename,"rb").read()
 	inisize = len(fi)
@@ -46,22 +54,23 @@ def mtfcompress(filename):
 
 	fo = open(filename+".mtf","wb")
 	fo.write(struct.pack('i',len(seq)))
-	fo.write(struct.pack('i'*len(seq), *seq))
+	for i in seq:
+		fo.write(struct.pack('c', chr(i)))
 	fo.write(struct.pack('i',len(alph)))
 	fo.write(struct.pack('c'*len(alph), *alph))
-	finsize = (2+len(seq))*4+len(alph)
+	finsize = (2+len(seq))+len(alph)
 	print("%d bytes written." % (finsize))
 	print("%f%% Compressed." % ((1-(float(finsize)/inisize))*100))
 	fo.close()
 
 @recordTime
-def mtfdecompress(filename):
+def mtfdecode(filename):
 	print("De-Compressing file %s" % filename)	
 	fi = open(filename,"rb")
 	n = struct.unpack('i',fi.read(4))[0]
 	seq = []
 	for x in range(n):
-		seq.append(struct.unpack('i',fi.read(4))[0])
+		seq.append(ord(struct.unpack('c',fi.read(1))[0]))
 	n = struct.unpack('i',fi.read(4))[0]
 	alph = []
 	for x in range(n):
@@ -73,25 +82,25 @@ def mtfdecompress(filename):
 	fo.close()
 
 @recordTime
-def bwtcompress(filename):
+def bwtencode(filename):
 	print("BWT-ing file %s" % filename)
 	fi = open(filename,"rb").read()
 	bwttransform = bwt.encode(fi)
 	
 	fo = open(filename+".bwt","wb")
-	fo.write(struct.pack('i',bwttransform[1]))
-	fo.write(struct.pack('c'*len(bwttransform[0]),*bwttransform[0]))
+	fo.write(struct.pack('i',bwttransform[0]))
+	fo.write(struct.pack('c'*len(bwttransform[1]),*bwttransform[1]))
 	fo.close()
 
 @recordTime
-def bwtdecompress(filename):
-	print("decompressing file %s" % filename)
+def bwtdecode(filename):
+	print("Reverse BWT-ing file %s" % filename)
 	fi = open(filename,"rb")
 	n = struct.unpack('i',fi.read(4))[0]
 	c = fi.read()
 	fi.close()
 	fo = open(filename[:-4]+".lulz","wb")
-	fo.write(bwt.decode((c,n)))
+	fo.write(bwt.decode((n,c)))
 	fo.close()
 
 if __name__ == '__main__':
@@ -99,18 +108,22 @@ if __name__ == '__main__':
 		action = sys.argv[1]
 		filename = sys.argv[2]
 
-		if action == "compress":
+		if action == "c":
 			compressFile(filename)
-		elif action == "decompress":
+		elif action == "d":
 			decompress(filename)
-		elif action == "mtfcompress":
-			mtfcompress(filename)
-		elif action == "mtfdecompress":
-			mtfdecompress(filename)
-		elif action == "bwtcompress":
-			bwtcompress(filename)
-		elif action == "bwtdecompress":
-			bwtdecompress(filename)
+		elif action == "rle":
+			rlecompress(filename)
+		elif action == "unrle":
+			rledecompress(filename)
+		elif action == "mtf":
+			mtfencode(filename)
+		elif action == "unmtf":
+			mtfdecode(filename)
+		elif action == "bwt":
+			bwtencode(filename)
+		elif action == "unbwt":
+			bwtdecode(filename)
 		else:
 			cli.usage()
 	else:

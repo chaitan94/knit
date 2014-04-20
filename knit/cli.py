@@ -1,4 +1,10 @@
 def usage():
 	print("Usage:")
-	print("compress [filename] - file to compress")
-	print("decompress [filename] - file to decompress")
+	print("c [filename] - compress file")
+	print("d [filename] - decompress file")
+	print("rle [filename] - Run Length Encode file")
+	print("unrle [filename] - Run Length Decode file")
+	print("mtf [filename] - Move to front encode file")
+	print("unmtf [filename] - Move to front decode file")
+	print("bwt [filename] - BWT file")
+	print("unbwt [filename] - un-BWT file")
