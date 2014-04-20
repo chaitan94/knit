@@ -1,4 +1,4 @@
-import heapq
+import struct, heapq
 
 class Node:
 	def __init__(self):
@@ -80,6 +80,49 @@ def decode((counts, bitarray)):
 			string += p.c
 			p = q
 	return string
+
+def encodeFile(infile, outfile):
+	fi = open(infile, "rb").read()
+	counts, bitarray = encode(fi)
+	fo = open(outfile, "wb")
+	fo.write(struct.pack('i', len(counts)))
+	for i in counts:
+		fo.write(i)
+		fo.write(struct.pack('i', counts[i]))
+	n = len(bitarray)
+	asds = 0
+	for i in xrange(n/8):
+		byt = 0
+		for bb in xrange(8):
+			bit = bitarray[8*i+bb]
+			byt = byt << 1
+			byt += bit
+		fo.write(chr(byt))
+	fo.close()
+
+def decodeFile(infile, outfile):
+	fi = open(infile,"rb")
+	counts = {}
+	nc = struct.unpack('i', fi.read(4))[0]
+	for i in xrange(nc):
+		char = fi.read(1)
+		count = struct.unpack('i', fi.read(4))[0]
+		counts[char] = count
+	bitarray = []
+	data = fi.read()
+	for i in data:
+		n = ord(i)
+		minibitarray = []
+		for j in xrange(8):
+			minibitarray.append(n & 1 == True)
+			n = n >> 1
+		minibitarray.reverse()
+		bitarray = bitarray + minibitarray
+	fi.close()
+	fo = open(outfile,"wb")
+	decoded = decode((counts, bitarray))
+	fo.write(decoded)
+	fo.close()
 
 if __name__ == "__main__":
 	print decode(encode("chaitanya"))
