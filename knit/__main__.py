@@ -1,5 +1,5 @@
 #!/usr/bin/python
-import sys, time, rle, mtf, bwt, cli, os
+import sys, time, rle, mtf, bwt, cli, os, huffman
 
 def recordTime(f):
 	def w(*a):
@@ -10,12 +10,20 @@ def recordTime(f):
 	return w
 
 @recordTime
-def compressFile(filename):
-	pass
+def compress(filename):
+	bwt.encodeFile(filename, filename + ".bwt")
+	mtf.encodeFile(filename + ".bwt", filename + ".bwt.mtf")
+	huffman.encodeFile(filename + ".bwt.mtf", filename + ".h")
+	os.system("rm " + filename + ".bwt")
+	os.system("rm " + filename + ".bwt.mtf")
 
 @recordTime
 def decompress(filename):
-	pass
+	huffman.decodeFile(filename, filename[:-2] + ".bwt.mtf")
+	mtf.decodeFile(filename[:-2] + ".bwt.mtf", filename[:-2] + ".bwt")
+	bwt.decodeFile(filename[:-2] + ".bwt", filename[:-2] + ".lulz")
+	os.system("rm " + filename + ".bwt")
+	os.system("rm " + filename + ".bwt.mtf")
 
 @recordTime
 def rlecompress(infile):

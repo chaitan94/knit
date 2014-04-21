@@ -1,9 +1,11 @@
 *.pyc
+*.fuse*
 */*.pyc
 tests/*.rle
 tests/*.mtf
 tests/*.bwt
 tests/*.txt
+tests/*.h
 tests/*.jpg
 tests/*.png
 tests/*.lulz
