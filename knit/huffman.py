@@ -90,6 +90,7 @@ def encodeFile(infile, outfile):
 		fo.write(i)
 		fo.write(struct.pack('i', counts[i]))
 	n = len(bitarray)
+	fo.write(struct.pack('i', n))
 	asds = 0
 	for i in xrange(n/8):
 		byt = 0
@@ -98,6 +99,17 @@ def encodeFile(infile, outfile):
 			byt = byt << 1
 			byt += bit
 		fo.write(chr(byt))
+	byt = 0
+	coun = 0
+	for bb in xrange(8*(n/8), n):
+		bit = bitarray[bb]
+		byt = byt << 1
+		byt += bit
+		coun += 1
+	for bb in xrange(coun, 8):
+		byt = byt << 1
+		byt += bit
+	fo.write(chr(byt))
 	fo.close()
 
 def decodeFile(infile, outfile):
@@ -109,6 +121,7 @@ def decodeFile(infile, outfile):
 		count = struct.unpack('i', fi.read(4))[0]
 		counts[char] = count
 	bitarray = []
+	bitn = struct.unpack('i', fi.read(4))[0]
 	data = fi.read()
 	for i in data:
 		n = ord(i)
@@ -118,9 +131,11 @@ def decodeFile(infile, outfile):
 			n = n >> 1
 		minibitarray.reverse()
 		bitarray = bitarray + minibitarray
+	bitarray = bitarray[:bitn]
 	fi.close()
 	fo = open(outfile,"wb")
 	decoded = decode((counts, bitarray))
+	print decoded	
 	fo.write(decoded)
 	fo.close()
 
