@@ -1,24 +1,25 @@
 import struct
 
-def encode(s):
+def encode(string):
 	""" Transforms a given byte string to a Move-To-Front number sequence """
-	alph = list(set(s))
+	alph = list(set(string))
+	orgalph = alph[:]
 	sequence = []
-	for i in s:
+	for i in string:
 		n = alph.index(i)
 		sequence.append(n)
 		while n > 0:
 			alph[n] = alph[n-1]
 			n = n - 1
 		alph[0] = i
-	return sequence
+	return (sequence, orgalph)
 
-def decode(sequence,alph):
+def decode(sequence, alph):
 	string = ''
-	for i in sequence:
-		string = string + alph[i]
-		c = alph[i]
-		n = i
+	for i in range(len(sequence)):
+		string = string + alph[sequence[i]]
+		c = alph[sequence[i]]
+		n = sequence[i]
 		while n > 0:
 			alph[n] = alph[n-1]
 			n = n - 1
@@ -27,8 +28,7 @@ def decode(sequence,alph):
 
 def encodeFile(infile, outfile):
 	fi = open(infile,"rb").read()
-	alph = list(set(fi))
-	seq = encode(fi)
+	seq, alph = encode(fi)
 
 	fo = open(outfile, "wb")
 	fo.write(struct.pack('i',len(seq)))
@@ -40,14 +40,14 @@ def encodeFile(infile, outfile):
 
 def decodeFile(infile, outfile):
 	fi = open(infile,"rb")
-	n = struct.unpack('i',fi.read(4))[0]
+	n = struct.unpack('i', fi.read(4))[0]
 	seq = []
 	for x in range(n):
-		seq.append(ord(struct.unpack('c', fi.read(1))[0]))
+		seq.append(ord(fi.read(1)))
 	n = struct.unpack('i', fi.read(4))[0]
 	alph = []
 	for x in range(n):
-		alph.append(struct.unpack('c', fi.read(1))[0])
+		alph.append(fi.read(1))
 	a = decode(seq, alph)
 	
 	fo = open(outfile, "wb")

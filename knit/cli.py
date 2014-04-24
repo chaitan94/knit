@@ -8,3 +8,5 @@ def usage():
 	print("unmtf [filename] - Move to front decode file")
 	print("bwt [filename] - BWT file")
 	print("unbwt [filename] - un-BWT file")
+	print("huffman [filename] - Huffman encode file")
+	print("unhuffman [filename] - Huffman decode file")

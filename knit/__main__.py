@@ -22,8 +22,8 @@ def decompress(filename):
 	huffman.decodeFile(filename, filename[:-2] + ".bwt.mtf")
 	mtf.decodeFile(filename[:-2] + ".bwt.mtf", filename[:-2] + ".bwt")
 	bwt.decodeFile(filename[:-2] + ".bwt", filename[:-2] + ".lulz")
-	os.system("rm " + filename + ".bwt")
-	os.system("rm " + filename + ".bwt.mtf")
+	os.system("rm " + filename[:-2] + ".bwt")
+	os.system("rm " + filename[:-2] + ".bwt.mtf")
 
 @recordTime
 def rlecompress(infile):
@@ -61,13 +61,23 @@ def bwtdecode(filename):
 	print("Reverse BWT-ing file %s" % filename)
 	bwt.decodeFile(filename, filename[:-4] + ".lulz")
 
+@recordTime
+def huffmanencode(filename):
+	print("Huffman encoding file %s" % filename)
+	huffman.encodeFile(filename, filename + ".h")
+
+@recordTime
+def huffmandecode(filename):
+	print("Huffman decoding file %s" % filename)
+	huffman.decodeFile(filename, filename[:-2] + ".lulz")
+
 if __name__ == '__main__':
 	if len(sys.argv) == 3:
 		action = sys.argv[1]
 		filename = sys.argv[2]
 
 		if action == "c":
-			compressFile(filename)
+			compress(filename)
 		elif action == "d":
 			decompress(filename)
 		elif action == "rle":
@@ -82,6 +92,10 @@ if __name__ == '__main__':
 			bwtencode(filename)
 		elif action == "unbwt":
 			bwtdecode(filename)
+		elif action == "huffman":
+			huffmanencode(filename)
+		elif action == "unhuffman":
+			huffmandecode(filename)
 		else:
 			cli.usage()
 	else:
