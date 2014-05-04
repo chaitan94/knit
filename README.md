@@ -21,3 +21,14 @@ To test it manually:
  * put a text file you want to compress in tests folder
  * run `python knit compress tests/filename.txt`
  * run `python knit decompress tests/filename.txt.h`
+
+## Project Structure
+knit folder contains code for BWT, MTF, RLE and huffman in python
+	bwt.py file has code for coding and decoding in BWT
+	mtf.py file has code for coding and decoding in MTF
+	rle.py file has code for coding and decoding in RLE
+	huffman.py file has code for compressing and decompressing in Huffman
+tests folder contains test scripts and test cases
+	compress.py file is a small script which finds all txt files in tests folder and compresses them
+	decompress.py file is a small script which finds all txt files in tests folder and decompresses them
+	clean.py file is a small script which deletes all .h and .lulz files in tests folder
