@@ -76,9 +76,9 @@ if __name__ == '__main__':
 		action = sys.argv[1]
 		filename = sys.argv[2]
 
-		if action == "c":
+		if action == "compress":
 			compress(filename)
-		elif action == "d":
+		elif action == "decompress":
 			decompress(filename)
 		elif action == "rle":
 			rlecompress(filename)

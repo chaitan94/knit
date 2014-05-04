@@ -72,10 +72,8 @@ def decode((counts, bitarray)):
 	p = q
 	string = ''
 	for i in bitarray:
-		if i:
-			p = p.right
-		else:
-			p = p.left
+		if i: p = p.right
+		else: p = p.left
 		if p.left is None and p.right is None:
 			string += p.c
 			p = q
@@ -135,7 +133,7 @@ def decodeFile(infile, outfile):
 	fi.close()
 	fo = open(outfile,"wb")
 	decoded = decode((counts, bitarray))
-	print decoded	
+	# print decoded	
 	fo.write(decoded)
 	fo.close()
 
